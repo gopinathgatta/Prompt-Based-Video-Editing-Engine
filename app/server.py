@@ -220,6 +220,10 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = urlparse(self.path).path
+        # Vercel rewrites the public root route to this function entrypoint.
+        # Treat the internal function path as the application's home page.
+        if path in {"/api/index", "/api/index.py"}:
+            path = "/"
         if path == "/" or path == "/index.html":
             try: data = (STATIC / "index.html").read_bytes()
             except OSError: return self._send(500, envelope("UI_MISSING", "Static UI could not be loaded"))
