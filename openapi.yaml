@@ -50,6 +50,21 @@ paths:
       parameters: [{$ref: '#/components/parameters/SessionId'}]
       responses:
         '200': {description: Original MP4 or MOV media}
+  /api/v1/sessions/{session_id}/music:
+    post:
+      summary: Upload optional background music for ducked mixing during render
+      parameters: [{$ref: '#/components/parameters/SessionId'}, {$ref: '#/components/parameters/IdempotencyKey'}]
+      requestBody:
+        required: true
+        content:
+          audio/mpeg: {schema: {type: string, format: binary}}
+          audio/wav: {schema: {type: string, format: binary}}
+          audio/mp4: {schema: {type: string, format: binary}}
+          audio/aac: {schema: {type: string, format: binary}}
+      responses:
+        '201': {description: Music stored for the current session}
+        '415': {$ref: '#/components/responses/Error'}
+        '422': {$ref: '#/components/responses/Error'}
   /api/v1/sessions/{session_id}/transcript:
     post:
       summary: Load user-supplied word-level transcript

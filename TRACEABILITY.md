@@ -9,10 +9,10 @@ Statuses are evidence-based. **PASS** means an automated check directly exercise
 | MH-3 | Every instruction has Applied, Needs clarification, or Rejected outcome | `OperationResponse` and API parser return these three statuses; ambiguity is surfaced | API end-to-end test checks Applied caption/cut, pricing clarification and selection, and Rejected bleep; invalid timeline operations are unit-tested | PASS for exercised instruction routes; parser is intentionally limited |
 | MH-4 | Deterministic timeline hash across three runs | Canonical JSON hash excludes operational history metadata | `test_identical_fixture_runs_have_identical_canonical_hash` runs the same fixture sequence three times; all hashes equal | PASS for the tested sequence |
 | MH-5 | Verify A/V sync and rendered duration within official tolerance | FFmpeg output is probed; manifest reports frame-based duration error and stream start offset | `tests/test_api_e2e.py` checks duration error <=1.01 frames and stream offset <=1 frame; `outputs/demo/*manifest.json` records a 30 fps render | PARTIAL (stream timestamp offset only; perceptual sync/listening was not measured) |
-| MH-6 | Required edit operations, undo/redo, restore | Engine/parser/render support cut, keep, reorder, speed, mute, captions, overlay, auto-captions, filler removal, undo, redo, source-range restore; unsupported bleep/silence/music are rejected | Unit tests cover cut, keep-related engine paths, reorder, speed, captions, filler anchors, undo/redo and restore; API test covers cut/caption/mute support boundary/render. See `docs/hard_cases.md` | FAIL (bleep, silence removal, background music ducking and specific historical-edit undo are incomplete) |
+| MH-6 | Required edit operations, undo/redo, restore | Engine/parser/render support cut, keep, reorder, speed, mute/bleep, captions, overlay, auto-captions, filler and detected-silence removal, ducked background music, undo, redo, source-range restore, and targeted earlier-cut undo while retaining later music | Unit/API integration covers the core edit flow and bleep render; render integration covers ducked music and detected-silence removal; parser test covers targeted historical undo. See `docs/hard_cases.md` | PASS (tested locally; the full official scenario suite remains separate evidence) |
 | MH-7 | Explicit, consistent timestamp policy | Numeric instruction times use current edited-timeline seconds; transcript word ranges use original-source seconds; source restore uses source seconds | `test_time_literals_are_current_timeline_seconds`; API responses include policy; UI labels transcript input as original-source seconds | PASS for documented policy |
 | MH-8 | Integration, runner, reproducibility, live demo | Local HTTP API, OpenAPI contract, background rendering, output links, batch runner, Docker files, local UI | 18-test suite passes; source is committed on the public GitHub `main` branch. Docker not installed; port could not be exposed to the browser from this managed workspace; no public app deployment | FAIL (no verified live demo/deployment; Docker unverified) |
-| CORE-1 | All must-haves pass | See MH rows | MH-2, MH-5 partial; MH-6 and MH-8 fail | FAIL |
+| CORE-1 | All must-haves pass | See MH rows | MH-2 and MH-5 partial; MH-8 fail | FAIL |
 | CORE-2 | Eight-step worked example on candidate-owned video | `scripts/demo_session.py` runs a shortened sequence against a generated test pattern | Synthetic sample is 8 seconds, not candidate-owned footage; no full official eight-step run | FAIL |
 | CORE-3 | One single-speaker and one multi-speaker video | Transcript schema permits speaker label, but transcription/diarization not provided | No consented single-/multi-speaker video tested | FAIL |
 | ADV-1 | Caption lifecycle and readability through cuts/speed | Word-ID anchored caption and renderer minimum duration | Unit movement/restore and render integration; no complete readability/clipping evaluation | PARTIAL |
@@ -24,7 +24,7 @@ Statuses are evidence-based. **PASS** means an automated check directly exercise
 | OUT-3 | OpenTimelineIO export | Not implemented | None | FAIL |
 | OUT-4 | 40+ automated scenarios | 18 tests total | `py -m unittest discover -s tests -v`; no 40-scenario suite/CI | FAIL |
 | INT-1 | One-command Docker startup and tests | Dockerfile and Compose file exist | Docker executable unavailable on host; not verified | FAIL |
-| INT-2 | OpenAPI 3.1 and `/api/v1/` routes | `openapi.yaml`, `app/server.py` | E2E exercises actual `/api/v1/` routes; YAML not independently schema-validated | PARTIAL |
+| INT-2 | OpenAPI 3.1 and `/api/v1/` routes | `openapi.yaml`, `app/server.py` | `tests/test_openapi_contract.py` asserts the documented public paths match the running service's supported route surface; E2E exercises the primary `/api/v1/` flow | PASS |
 | INT-3 | Async job returns 202/job ID and poll | Thread-pool render endpoint | API E2E checks 202, returned job ID, polling to succeeded | PASS for render job |
 | INT-4 | Idempotency-Key for POST | Server requires key, caches response by key | API E2E checks duplicate instruction and duplicate render idempotency | PASS for tested paths |
 | INT-5 | Standard JSON error envelope | `envelope()` in API | Unit/API error envelope route not directly asserted | PARTIAL |
@@ -37,6 +37,6 @@ Statuses are evidence-based. **PASS** means an automated check directly exercise
 ## Verified local test result
 
 Command: `py -m unittest discover -s tests -v`  
-Result: **18 passed, 0 failed**, using Python 3.12 and the host FFmpeg/FFprobe; raw log: `evidence/full_test_run.log`.
+Result: **30 passed, 0 failed**, using Python 3.12 and the host FFmpeg/FFprobe; raw log: `evidence/full_test_run.log`.
 
 The sample render is synthetic, not a human-recorded source. Its manifest and raw values are under `outputs/demo/`. The stream-start timestamp comparison does not measure perceived lip sync. See `REPORT.md` for exact limitations.

@@ -33,10 +33,13 @@ The service could not be exposed by this managed execution workspace to its brow
 - `Change the existing caption to red`
 - `Add text overlay 'Chapter 1' when I say introduction`
 - `Mute pricing` (unique transcript phrase required)
+- `Bleep pricing` (unique transcript phrase required; rendered as a 1 kHz tone)
 - `Remove filler words` (only transcript entries marked `filler: true`)
+- `Remove silences longer than 0.5 seconds` (FFmpeg source-audio detection; preserves configured deliberate pauses)
+- Upload optional MP3/WAV/M4A/AAC music, then `Add background music` (ducked beneath source speech during render)
 - `Undo`, `Redo`, `Restore the intro`
 
-Repeated semantic matches request clarification. Bleep, automatic silence detection/removal, background music/ducking, URL ingestion and machine transcription are not implemented and are rejected or unavailable. Unsupported instructions must not be described as applied.
+Repeated semantic matches request clarification. URL ingestion and machine transcription are not implemented. Unsupported instructions must not be described as applied.
 
 ## Timestamp policy
 
@@ -53,7 +56,7 @@ py -m unittest discover -s tests -v
 py scripts/demo_session.py
 ```
 
-The automated suite generates synthetic test-pattern/sine-tone videos, exercises the timeline, rendering and HTTP API, and checks the source hash remains unchanged. Current verified local result: 18 tests pass. The sample output and FFprobe-derived manifest are under `outputs/demo/`. There is no real speech, no transcription accuracy result, and no perceptual lip-sync listening test.
+The automated suite generates synthetic test-pattern/sine-tone videos, exercises the timeline, rendering and HTTP API, and checks the source hash remains unchanged. Current verified local result: 30 tests pass. The sample output and FFprobe-derived manifest are under `outputs/demo/`. There is no real speech, no transcription accuracy result, and no perceptual lip-sync listening test.
 
 Run the API-backed sample against an isolated local server process:
 
@@ -84,4 +87,4 @@ Common JSON error codes include `INVALID_REQUEST`, `UNSUPPORTED_MEDIA`, `UPLOAD_
 
 ## Important limitations before submission
 
-This prototype does **not** pass all official must-haves. See the precise statuses in `TRACEABILITY.md`. There is no public deployment/live URL, no durable session database, no ASR/diarization, no full hard-case test pack, incomplete required operations (notably bleep, silence removal, music ducking and specific historical-edit restore), and no human-speaking candidate-owned single-/multi-speaker test videos. The FFmpeg output reports stream-start offset, not perceptual sync. The provenance/license of the timeline code that was present before this task is unknown and must be resolved before any commercial-use declaration. Do not answer “Yes” to the all-must-haves submission question.
+This prototype does **not** yet pass all official must-haves. See the precise statuses in `TRACEABILITY.md`. There is no verified public full-render deployment, durable session database, ASR/diarization, complete hard-case evidence, specific historical-edit restore, or candidate-owned single-/multi-speaker test videos. The FFmpeg output reports stream-start offset, not perceptual sync. The provenance/license of the timeline code that was present before this task is unknown and must be resolved before any commercial-use declaration. Do not answer “Yes” to the all-must-haves submission question.

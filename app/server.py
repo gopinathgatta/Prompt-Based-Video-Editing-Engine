@@ -6,6 +6,7 @@ import mimetypes
 import os
 import re
 import shutil
+import subprocess
 import threading
 import time
 import uuid
@@ -67,11 +68,33 @@ def find_phrase(words: list[TranscriptWord], phrase: str) -> list[list[str]]:
     return out
 
 
+def detect_silences(source: str, engine: TimelineEngine, threshold_s: float, noise_db: float = -35.0) -> list[tuple[float, float]]:
+    """Return qualifying silence intervals expressed in edited-timeline seconds."""
+    run = subprocess.run(
+        ["ffmpeg", "-hide_banner", "-i", source, "-af", f"silencedetect=noise={noise_db}dB:d={threshold_s}", "-f", "null", "-"],
+        capture_output=True, text=True,
+    )
+    starts = [float(x) for x in re.findall(r"silence_start:\s*([0-9.]+)", run.stderr)]
+    ends = [float(x) for x in re.findall(r"silence_end:\s*([0-9.]+)", run.stderr)]
+    source_ranges = [(a, b) for a, b in zip(starts, ends) if b - a > threshold_s]
+    edited_ranges: list[tuple[float, float]] = []
+    cursor = 0.0
+    for segment in engine.timeline.segments:
+        for start, end in source_ranges:
+            a, b = max(start, segment.source_start_s), min(end, segment.source_end_s)
+            if b > a:
+                edited_ranges.append((cursor + (a - segment.source_start_s) / segment.speed, cursor + (b - segment.source_start_s) / segment.speed))
+        cursor += segment.duration_s
+    return edited_ranges
+
+
 def apply_instruction(engine: TimelineEngine, instruction: str) -> OperationResponse:
     text = instruction.strip()
     lower = text.casefold()
     if lower in {"undo", "undo the previous edit"}:
         return engine.undo()
+    if "undo the second-to-last cut" in lower and "keep the music" in lower:
+        return engine.undo_second_to_last_cut_keep_music()
     if lower == "redo":
         return engine.redo()
     if "render" in lower:
@@ -111,7 +134,13 @@ def apply_instruction(engine: TimelineEngine, instruction: str) -> OperationResp
     if "filler" in lower or "ums and ahs" in lower or "um and ah" in lower:
         return engine.remove_fillers()
     if lower.startswith("bleep "):
-        return engine.response("Rejected", reason="Bleep output is not yet supported by the local renderer; no timeline change was made.")
+        phrase = text.split(" ", 1)[1].strip("'\"")
+        matches = find_phrase(engine.visible_words(), phrase)
+        if not matches:
+            return engine.response("Needs clarification", question="Which visible transcript word should be bleeped?", options=["Select transcript words"])
+        if len(matches) > 1:
+            return engine.response("Needs clarification", question="That word or phrase occurs multiple times. Which occurrence should be bleeped?", options=[f"Occurrence {i+1}" for i in range(len(matches))])
+        return engine.audio_word(matches[0], "bleep")
     if lower.startswith("mute "):
         phrase = text.split(" ", 1)[1].strip("'\"")
         matches = find_phrase(engine.visible_words(), phrase)
@@ -158,9 +187,9 @@ def apply_instruction(engine: TimelineEngine, instruction: str) -> OperationResp
         if pos:
             return engine.cut(*pos, instruction=text)
     if "silence" in lower:
-        return engine.response("Rejected", reason="Automatic silence detection is not implemented; no segment was changed.")
+        return engine.response("Needs clarification", question="Silence removal requires the uploaded source audio.", options=["Use the session silence-removal command"])
     if "background music" in lower or "duck" in lower:
-        return engine.response("Rejected", reason="Background music ingestion and speech ducking are not implemented in this local demo.")
+        return engine.response("Needs clarification", question="Upload a music file to this session before adding background music.", options=["Upload MP3, WAV, M4A, or AAC music"])
     if lower.startswith("restore") and ("intro" in lower or "introduction" in lower):
         earliest_source = min((segment.source_start_s for segment in engine.timeline.segments), default=0.0)
         restore_end = min(30.0, earliest_source, engine.timeline.source_duration_s)
@@ -280,6 +309,26 @@ class Handler(BaseHTTPRequestHandler):
                 result = {"session_id": sid, "media": SESSIONS[sid]["media"], "source_url": f"/api/v1/sessions/{sid}/source", "transcription_status": "not_started; load word-level transcript JSON"}
                 IDEMPOTENCY[key] = {"digest": digest, "result": result, "code": 201}
                 return self._send(201, result)
+            music_match = re.fullmatch(r"/api/v1/sessions/([^/]+)/music", path)
+            if music_match:
+                sid = music_match.group(1); session = SESSIONS.get(sid)
+                if not session: return self._send(404, envelope("SESSION_NOT_FOUND", "No session with that ID"))
+                filename = Path(parse_qs(urlparse(self.path).query).get("filename", ["music.mp3"])[0]).name
+                suffix = Path(filename).suffix.casefold()
+                if suffix not in {".mp3", ".wav", ".m4a", ".aac"}:
+                    return self._send(415, envelope("UNSUPPORTED_AUDIO", "Upload MP3, WAV, M4A, or AAC music"))
+                if not raw: return self._send(400, envelope("EMPTY_UPLOAD", "Uploaded music is empty"))
+                music = MEDIA_DIR / f"{sid}_music{suffix}"; music.write_bytes(raw)
+                try:
+                    check = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries", "stream=codec_type", "-of", "default=nw=1", str(music)], capture_output=True, text=True, check=True)
+                    if "audio" not in check.stdout: raise ValueError("No audio stream was found")
+                except Exception as exc:
+                    music.unlink(missing_ok=True)
+                    return self._send(422, envelope("INVALID_AUDIO", "FFprobe could not read this music file", details={"reason": str(exc)[-800:]}))
+                session["music_source"] = str(music)
+                result = {"status": "uploaded", "filename": filename, "music_ready": True}
+                IDEMPOTENCY[key] = {"digest": digest, "result": result, "code": 201}
+                return self._send(201, result)
             m = re.fullmatch(r"/api/v1/sessions/([^/]+)/(instructions|transcript|render|undo|redo|restore)", path)
             if m:
                 sid, action = m.groups(); session = SESSIONS.get(sid)
@@ -289,6 +338,7 @@ class Handler(BaseHTTPRequestHandler):
                 except json.JSONDecodeError: return self._send(400, envelope("INVALID_JSON", "Request body must be JSON"))
                 if action == "instructions":
                     instruction = str(body.get("instruction", ""))
+                    lower_instruction = instruction.casefold()
                     selection = re.fullmatch(r"the\s+(\d+)(?:st|nd|rd|th)?\s+(?:one|occurrence)", instruction.strip(), re.I)
                     if not selection:
                         ordinal = re.fullmatch(r"the\s+(first|second|third|fourth|last)\s+(?:one|occurrence)", instruction.strip(), re.I)
@@ -311,6 +361,16 @@ class Handler(BaseHTTPRequestHandler):
                         ranges = [positions[x] for x in pending["word_ids"] if x in positions]
                         session["pending_clarification"] = None
                         result = engine.cut_ranges(ranges, instruction="Remove all pricing/cost matches") if ranges else engine.response("Rejected", reason="No pricing matches remain visible.")
+                    elif "silence" in lower_instruction:
+                        threshold_match = re.search(r"(?:longer than|over|above)\s*(\d+(?:\.\d+)?)\s*(?:seconds?|secs?|s)\b", lower_instruction)
+                        threshold_s = float(threshold_match.group(1)) if threshold_match else 0.4
+                        try:
+                            result = engine.remove_silences(detect_silences(session["source"], engine, threshold_s), threshold_s)
+                        except Exception as exc:
+                            result = engine.response("Rejected", reason=f"Silence detection failed: {str(exc)[-500:]}")
+                    elif "background music" in lower_instruction or "duck" in lower_instruction:
+                        source = session.get("music_source")
+                        result = engine.add_music(source) if source else engine.response("Needs clarification", question="Upload a music file before adding background music.", options=["Upload MP3, WAV, M4A, or AAC music"])
                     else:
                         result = apply_instruction(engine, instruction)
                         if result.status == "Needs clarification" and any(x in instruction.casefold() for x in ("pricing", "price", "cost")):

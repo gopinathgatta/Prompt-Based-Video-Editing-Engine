@@ -330,5 +330,34 @@ class TimelineEngine:
         self._restore_snapshot(after)
         return OperationResponse("Applied",[{"type":"redo"}],duration_s=self.timeline.duration_s,timeline_hash=self.timeline_hash(),moved_or_changed=["redid latest edit"])
 
+    def undo_second_to_last_cut_keep_music(self) -> OperationResponse:
+        """Undo an earlier cut while preserving a later music-addition edit.
+
+        This deliberately handles the stated compound instruction rather than
+        silently undoing the most recent operation. Later edits must be music
+        additions only; other dependencies require a clarification.
+        """
+        active = [(i, step) for i, step in enumerate(self.timeline.history) if step.active]
+        cut_positions = [(i, step) for i, step in active if step.operation.get("type") in {"cut", "cut_ranges"}]
+        if not cut_positions:
+            return OperationResponse("Needs clarification", reason="There is no active cut to undo.", timeline_hash=self.timeline_hash(), duration_s=self.timeline.duration_s)
+        target_index, target = cut_positions[-1]
+        later = [step for i, step in active if i > target_index]
+        if not later or any(step.operation.get("type") != "music.add" for step in later):
+            return OperationResponse("Needs clarification", question="I can preserve only later background-music edits for this targeted undo. Which edit should be undone?", options=["Undo the latest edit"] , timeline_hash=self.timeline_hash(), duration_s=self.timeline.duration_s)
+        snapshot_pos = next((i for i, (_, step) in enumerate(self._undo_snapshots) if step.id == target.id), None)
+        if snapshot_pos is None:
+            return OperationResponse("Rejected", reason="The requested historical cut cannot be restored in this session.", timeline_hash=self.timeline_hash(), duration_s=self.timeline.duration_s)
+        before, _ = self._undo_snapshots[snapshot_pos]
+        restored = copy.deepcopy(before)
+        restored["background_music"] = copy.deepcopy(self.timeline.background_music)
+        self._restore_snapshot(restored)
+        target.active = False
+        self._undo_snapshots.pop(snapshot_pos)
+        for i, (snap, step) in enumerate(self._undo_snapshots):
+            if step.operation.get("type") == "music.add":
+                self._undo_snapshots[i] = (copy.deepcopy(before), step)
+        return OperationResponse("Applied", [{"type": "undo.specific", "edit_id": target.id, "preserved": ["music.add"]}], duration_s=self.timeline.duration_s, timeline_hash=self.timeline_hash(), moved_or_changed=["undid the second-to-last cut and preserved background music"])
+
     def response(self, status="Applied", **kw) -> OperationResponse:
         return OperationResponse(status,timeline_hash=self.timeline_hash(),duration_s=self.timeline.duration_s,**kw)

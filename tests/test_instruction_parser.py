@@ -41,6 +41,22 @@ class InstructionParserTests(unittest.TestCase):
         result = apply_instruction(self.engine(), "Make the caption red")
         self.assertEqual(result.status, "Rejected")
 
+    def test_bleep_phrase_is_word_anchored(self):
+        engine = self.engine()
+        engine.timeline.words = [TranscriptWord("price", "price", 2.0, 2.3)]
+        result = apply_instruction(engine, "Bleep price")
+        self.assertEqual(result.status, "Applied")
+        self.assertEqual(engine.timeline.audio_effects[0]["type"], "bleep")
+
+    def test_targeted_undo_preserves_later_music(self):
+        engine = self.engine()
+        self.assertEqual(engine.cut(0, 1).status, "Applied")
+        self.assertEqual(engine.add_music("fixture.wav").status, "Applied")
+        result = apply_instruction(engine, "Undo the second-to-last cut but keep the music")
+        self.assertEqual(result.status, "Applied")
+        self.assertEqual(engine.timeline.background_music["source"], "fixture.wav")
+        self.assertAlmostEqual(engine.timeline.duration_s, 8.0)
+
 
 if __name__ == "__main__":
     unittest.main()

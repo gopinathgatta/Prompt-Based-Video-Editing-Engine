@@ -58,6 +58,9 @@ def render(engine: TimelineEngine, source: str, output: str) -> dict:
     started = time.perf_counter()
     filters: list[str] = []
     has_audio = metadata["audio"]
+    music = timeline.background_music
+    if music and not Path(str(music.get("source", ""))).is_file():
+        raise ValueError("The selected background music file is unavailable")
     vlabels, alabels = [], []
     if len(timeline.segments) > 1:
         filters.append(f"[0:v:0]split={len(timeline.segments)}" + "".join(f"[vsrc{i}]" for i in range(len(timeline.segments))))
@@ -116,16 +119,34 @@ def render(engine: TimelineEngine, source: str, output: str) -> dict:
     if has_audio:
         mute_index = 0
         for effect in timeline.audio_effects:
-            if effect.get("type") != "mute":
-                raise ValueError(f"Rendering audio effect {effect.get('type')} is not supported safely yet")
+            effect_type = effect.get("type")
+            if effect_type not in {"mute", "bleep"}:
+                raise ValueError(f"Rendering audio effect {effect_type} is not supported")
             for word_id in effect.get("word_ids", []):
                 span = positions.get(word_id)
                 if span:
-                    out_label = f"amute{mute_index}"
-                    filters.append(f"[{audio_label}]volume=0:enable='between(t,{span[0]:.6f},{span[1]:.6f})'[{out_label}]")
+                    muted_label = f"amute{mute_index}"
+                    filters.append(f"[{audio_label}]volume=0:enable='between(t,{span[0]:.6f},{span[1]:.6f})'[{muted_label}]")
+                    if effect_type == "bleep":
+                        duration = max(0.01, span[1] - span[0])
+                        tone_label, delayed_label, out_label = f"atone{mute_index}", f"adelay{mute_index}", f"ableep{mute_index}"
+                        filters.append(f"sine=frequency=1000:sample_rate=48000:duration={duration:.6f}[{tone_label}]")
+                        filters.append(f"[{tone_label}]adelay={int(round(span[0] * 1000))}:all=1[{delayed_label}]")
+                        filters.append(f"[{muted_label}][{delayed_label}]amix=inputs=2:duration=first:normalize=0[{out_label}]")
+                    else:
+                        out_label = muted_label
                     audio_label = out_label
                     mute_index += 1
-    cmd = ["ffmpeg", "-hide_banner", "-y", "-i", source, "-filter_complex", ";".join(filters), "-map", f"[{video_label}]"]
+        if music:
+            level = float(music.get("level_db", -18.0))
+            filters.append(f"[1:a]volume={10 ** (level / 20):.8f},aresample=48000[music]")
+            filters.append(f"[music][{audio_label}]sidechaincompress=threshold=0.02:ratio=8:attack=20:release=300[ducked]")
+            filters.append(f"[{audio_label}][ducked]amix=inputs=2:duration=first:normalize=0[amix]")
+            audio_label = "amix"
+    cmd = ["ffmpeg", "-hide_banner", "-y", "-i", source]
+    if music:
+        cmd += ["-stream_loop", "-1", "-i", str(music["source"])]
+    cmd += ["-filter_complex", ";".join(filters), "-map", f"[{video_label}]"]
     if has_audio:
         cmd += ["-map", f"[{audio_label}]"]
     cmd += ["-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p"]
