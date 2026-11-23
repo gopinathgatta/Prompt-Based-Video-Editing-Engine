@@ -70,9 +70,17 @@ class ApiEndToEndTests(unittest.TestCase):
                     {"id":"channel","text":"channel","start_s":2.44,"end_s":2.8},
                     {"id":"price1","text":"pricing","start_s":3.5,"end_s":3.8},
                     {"id":"price2","text":"cost","start_s":4.6,"end_s":4.9},
+                    {"id":"host_old","text":"old","start_s":0.5,"end_s":0.7,"speaker":"host"},
+                    {"id":"host_job","text":"job","start_s":0.71,"end_s":0.9,"speaker":"host"},
+                    {"id":"guest_old","text":"old","start_s":1.1,"end_s":1.3,"speaker":"guest"},
+                    {"id":"guest_job","text":"job","start_s":1.31,"end_s":1.5,"speaker":"guest"},
                 ]
                 code, _ = call(f"{base}/api/v1/sessions/{sid}/transcript", "POST", {"words":words}, str(uuid.uuid4()))
                 self.assertEqual(code, 200)
+                _, speaker_question = call(f"{base}/api/v1/sessions/{sid}/instructions", "POST", {"instruction":"Remove everything the guest says about their old job"}, str(uuid.uuid4()))
+                self.assertEqual(speaker_question["status"], "Needs clarification")
+                _, speaker_cut = call(f"{base}/api/v1/sessions/{sid}/instructions", "POST", {"instruction":"Only the guest answer"}, str(uuid.uuid4()))
+                self.assertEqual(speaker_cut["status"], "Applied")
                 _, caption = call(f"{base}/api/v1/sessions/{sid}/instructions", "POST", {"instruction":"Add a caption 'Welcome!' when I say welcome to the channel"}, str(uuid.uuid4()))
                 self.assertEqual(caption["status"], "Applied")
                 instruction = {"instruction":"Cut the first 1 seconds"}; idem = str(uuid.uuid4())
@@ -80,7 +88,7 @@ class ApiEndToEndTests(unittest.TestCase):
                 _, cut2 = call(f"{base}/api/v1/sessions/{sid}/instructions", "POST", instruction, idem)
                 self.assertEqual(cut1["timeline_hash"], cut2["timeline_hash"])
                 _, current = call(f"{base}/api/v1/sessions/{sid}")
-                self.assertAlmostEqual(current["duration_s"], 5.0, places=2)
+                self.assertAlmostEqual(current["duration_s"], 4.6, places=2)
                 _, clarification = call(f"{base}/api/v1/sessions/{sid}/instructions", "POST", {"instruction":"Remove the pricing discussion"}, str(uuid.uuid4()))
                 self.assertEqual(clarification["status"], "Needs clarification")
                 _, chosen = call(f"{base}/api/v1/sessions/{sid}/instructions", "POST", {"instruction":"the second one"}, str(uuid.uuid4()))

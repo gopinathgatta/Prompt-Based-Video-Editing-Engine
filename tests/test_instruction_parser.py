@@ -1,7 +1,7 @@
 import hashlib
 import unittest
 
-from app.server import apply_instruction
+from app.server import apply_instruction, speaker_topic_ranges
 from app.timeline.engine import TimelineEngine
 from app.timeline.models import Segment, Timeline, TranscriptWord
 
@@ -56,6 +56,16 @@ class InstructionParserTests(unittest.TestCase):
         self.assertEqual(result.status, "Applied")
         self.assertEqual(engine.timeline.background_music["source"], "fixture.wav")
         self.assertAlmostEqual(engine.timeline.duration_s, 8.0)
+
+    def test_speaker_topic_search_uses_only_matching_speaker_labels(self):
+        engine = self.engine()
+        engine.timeline.words = [
+            TranscriptWord("host_old", "old", 0.5, 0.7, speaker="host"),
+            TranscriptWord("host_job", "job", 0.71, 0.9, speaker="host"),
+            TranscriptWord("guest_old", "old", 2.0, 2.2, speaker="guest"),
+            TranscriptWord("guest_job", "job", 2.21, 2.4, speaker="guest"),
+        ]
+        self.assertEqual(speaker_topic_ranges(engine, "guest", "their old job"), [(2.0, 2.4)])
 
 
 if __name__ == "__main__":

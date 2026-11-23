@@ -68,6 +68,20 @@ def find_phrase(words: list[TranscriptWord], phrase: str) -> list[list[str]]:
     return out
 
 
+def speaker_topic_ranges(engine: TimelineEngine, speaker: str, topic: str) -> list[tuple[float, float]]:
+    """Find exact transcript topic mentions spoken entirely by one labelled speaker."""
+    normalized_topic = re.sub(r"^(?:their|the|a|an)\s+", "", topic.strip(), flags=re.I)
+    words = engine.visible_words()
+    positions = engine.word_positions()
+    ranges = []
+    for match in find_phrase(words, normalized_topic):
+        matched_words = [next(word for word in words if word.id == word_id) for word_id in match]
+        if all(word.speaker.casefold() == speaker.casefold() for word in matched_words):
+            spans = [positions[word_id] for word_id in match if word_id in positions]
+            if spans: ranges.append((min(span[0] for span in spans), max(span[1] for span in spans)))
+    return ranges
+
+
 def detect_silences(source: str, engine: TimelineEngine, threshold_s: float, noise_db: float = -35.0) -> list[tuple[float, float]]:
     """Return qualifying silence intervals expressed in edited-timeline seconds."""
     run = subprocess.run(
@@ -347,7 +361,10 @@ class Handler(BaseHTTPRequestHandler):
                             selection = type("Selection", (), {"group": lambda self, n: str({"first": 1, "second": 2, "third": 3, "fourth": 4, "last": 999}[word])})()
                     all_selection = re.fullmatch(r"all(?: occurrences)?", instruction.strip(), re.I)
                     pending = session.get("pending_clarification")
-                    if pending and selection and pending["kind"] == "pricing":
+                    if pending and pending["kind"] == "speaker_topic" and lower_instruction in {"only the guest answer", "only the speaker answer", "remove only the answer"}:
+                        session["pending_clarification"] = None
+                        result = engine.cut_ranges(pending["ranges"], instruction="remove only the labelled speaker's answer")
+                    elif pending and selection and pending["kind"] == "pricing":
                         pick = int(selection.group(1)) - 1
                         if 0 <= pick < len(pending["word_ids"]):
                             word_id = pending["word_ids"][pick]
@@ -372,7 +389,17 @@ class Handler(BaseHTTPRequestHandler):
                         source = session.get("music_source")
                         result = engine.add_music(source) if source else engine.response("Needs clarification", question="Upload a music file before adding background music.", options=["Upload MP3, WAV, M4A, or AAC music"])
                     else:
-                        result = apply_instruction(engine, instruction)
+                        speaker_match = re.fullmatch(r"(?:remove|cut)\s+(?:everything\s+)?(?:the\s+)?([\w-]+)\s+(?:says?|said)\s+(?:about\s+)?(.+?)\.?", instruction.strip(), re.I)
+                        if speaker_match:
+                            speaker, topic = speaker_match.groups()
+                            ranges = speaker_topic_ranges(engine, speaker, topic)
+                            if not ranges:
+                                result = engine.response("Needs clarification", question=f"I could not find a visible {speaker}-labelled transcript passage matching '{topic}'.", options=["Check the speaker label", "Specify the exact transcript phrase"])
+                            else:
+                                session["pending_clarification"] = {"kind": "speaker_topic", "ranges": ranges}
+                                result = engine.response("Needs clarification", question=f"I found {len(ranges)} {speaker}-labelled matching passage(s). Remove only that speaker's answer, or include the host's lead-in question?", options=["Only the guest answer", "Include the host lead-in"])
+                        else:
+                            result = apply_instruction(engine, instruction)
                         if result.status == "Needs clarification" and any(x in instruction.casefold() for x in ("pricing", "price", "cost")):
                             hits = [w.id for w in engine.visible_words() if re.sub(r"[^\w]", "", w.text.casefold()) in {"pricing", "price", "cost"}]
                             if len(hits) > 1: session["pending_clarification"] = {"kind": "pricing", "word_ids": hits}
