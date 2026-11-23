@@ -1,0 +1,91 @@
+{
+  "run_at_local": "2026-11-22T19:37:38.715412+05:30",
+  "command": "py scripts/run_session.py examples/demo_session.json --start-server --output outputs/session_runs",
+  "raw_result": "outputs/session_runs/demo_session_results.json",
+  "raw_cli_log": "evidence/session_runner_cli.log",
+  "input": "outputs/demo/synthetic_source.mp4 (8 seconds, 30 fps, synthetic pattern + sine audio)",
+  "timeline_snapshots": [
+    "outputs/session_runs/demo_session_step_01.json",
+    "outputs/session_runs/demo_session_step_02.json",
+    "outputs/session_runs/demo_session_step_03.json",
+    "outputs/session_runs/demo_session_step_04.json",
+    "outputs/session_runs/demo_session_step_05.json",
+    "outputs/session_runs/demo_session_step_06.json",
+    "outputs/session_runs/demo_session_step_07.json",
+    "outputs/session_runs/demo_session_step_08.json",
+    "outputs/session_runs/demo_session_step_09.json"
+  ],
+  "instructions": 9,
+  "instruction_statuses": {
+    "Applied": 8,
+    "Needs clarification": 1,
+    "Rejected": 0
+  },
+  "instruction_latency_ms": {
+    "samples": [
+      12.805,
+      13.247,
+      2.297,
+      12.909,
+      13.554,
+      12.096,
+      11.971,
+      12.404,
+      2.439
+    ],
+    "median": 12.404,
+    "maximum": 13.554,
+    "scope": "One 8-second synthetic session on local Windows host; not official 5-minute or 60-minute benchmark."
+  },
+  "final_caption_color": "red",
+  "render_job_status": "succeeded",
+  "render_outputs": [
+    "outputs\\session_runs\\demo_session_rendered.mp4",
+    "outputs\\session_runs\\demo_session_rendered.mp4.manifest.json"
+  ],
+  "render_manifest_path": "outputs/session_runs/demo_session_rendered.mp4.manifest.json",
+  "render_manifest": {
+    "source_sha256": "1e37c9aeb619f044a9be86a082df01ca6eb595ec15d34ebfe90bbce27c290805",
+    "output_path": "c58a1685-7b6a-42d5-a29b-d905139c1b00_641248d0-1b94-42cd-bb97-c88eaa939f53.mp4",
+    "output_sha256": "60f543b051b6856157d2dd6d3fe153114f578e48892779cd60c96e5fbe2adce6",
+    "timeline_duration_s": 5.5,
+    "rendered_duration_s": 5.533333,
+    "duration_error_frames": 0.999989999999995,
+    "av_start_offset_frames": 0.0,
+    "frame_rate": 30.0,
+    "audio_present": true,
+    "render_seconds": 0.32772079999995185,
+    "versions": {
+      "ffmpeg": "ffmpeg version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+      "ffprobe": "ffprobe version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers"
+    },
+    "render_settings": {
+      "video_encoder": "libx264",
+      "preset": "veryfast",
+      "crf": 20,
+      "pixel_format": "yuv420p",
+      "audio_encoder": "aac",
+      "audio_bitrate": "160k",
+      "font_file": "C:/Windows/Fonts/arial.ttf",
+      "timestamp_policy": "current_timeline_seconds"
+    },
+    "warnings": [
+      "No automatic transcription was performed.",
+      "A/V start offset is a stream timestamp comparison; perceptual sync was not measured."
+    ],
+    "models": [],
+    "cost": "No external model/service cost; local FFmpeg runtime not monetized.",
+    "rights": "Input-media rights are the uploader's responsibility; FFmpeg distribution/build licensing must be verified before commercial deployment.",
+    "licenses": {
+      "application": "pre-existing timeline code provenance is unverified; see SOURCES.md",
+      "ffmpeg": "host build is GPL-enabled; see SOURCES.md",
+      "font": "font licensing depends on configured PS2_FONT_FILE; see SOURCES.md"
+    }
+  },
+  "final_duration_s": 5.5,
+  "final_timeline_hash": "90813cd13f53ad87468e6fc915e52cca83a257ce658561dd0f350b4fb479aeec",
+  "warnings": [
+    "Synthetic test clip only.",
+    "Output measurements do not validate perceived sync or real speech."
+  ]
+}

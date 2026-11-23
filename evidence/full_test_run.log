@@ -1,0 +1,23 @@
+test_upload_content_edit_ambiguity_render_and_idempotency (test_api_e2e.ApiEndToEndTests.test_upload_content_edit_ambiguity_render_and_idempotency) ... ok
+test_caption_color_change_is_applied_by_instruction_parser (test_instruction_parser.InstructionParserTests.test_caption_color_change_is_applied_by_instruction_parser) ... ok
+test_caption_color_change_without_caption_is_rejected (test_instruction_parser.InstructionParserTests.test_caption_color_change_without_caption_is_rejected) ... ok
+test_restore_intro_does_not_duplicate_existing_source (test_instruction_parser.InstructionParserTests.test_restore_intro_does_not_duplicate_existing_source) ... ok
+test_restore_intro_restores_only_the_missing_prefix (test_instruction_parser.InstructionParserTests.test_restore_intro_restores_only_the_missing_prefix) ... ok
+test_cut_speed_and_caption_render_to_valid_video (test_render_integration.RenderIntegrationTests.test_cut_speed_and_caption_render_to_valid_video) ... ok
+test_caption_is_hidden_on_exact_cut_and_returns_when_source_is_restored (test_timeline_engine.TimelineEngineTests.test_caption_is_hidden_on_exact_cut_and_returns_when_source_is_restored) ... ok
+test_caption_word_anchor_moves_after_preceding_cut (test_timeline_engine.TimelineEngineTests.test_caption_word_anchor_moves_after_preceding_cut) ... ok
+test_identical_fixture_runs_have_identical_canonical_hash (test_timeline_engine.TimelineEngineTests.test_identical_fixture_runs_have_identical_canonical_hash) ... ok
+test_invalid_caption_reference_is_rejected (test_timeline_engine.TimelineEngineTests.test_invalid_caption_reference_is_rejected) ... ok
+test_out_of_range_and_whole_video_cuts_are_rejected_without_mutation (test_timeline_engine.TimelineEngineTests.test_out_of_range_and_whole_video_cuts_are_rejected_without_mutation) ... ok
+test_reorder_preserves_word_ids (test_timeline_engine.TimelineEngineTests.test_reorder_preserves_word_ids) ... ok
+test_repeat_identical_cut_is_safe_noop (test_timeline_engine.TimelineEngineTests.test_repeat_identical_cut_is_safe_noop) ... ok
+test_restore_source_range_restores_content_without_reverting_other_edits (test_timeline_engine.TimelineEngineTests.test_restore_source_range_restores_content_without_reverting_other_edits) ... ok
+test_speed_changes_timeline_duration_not_source_anchors (test_timeline_engine.TimelineEngineTests.test_speed_changes_timeline_duration_not_source_anchors) ... ok
+test_time_literals_are_current_timeline_seconds (test_timeline_engine.TimelineEngineTests.test_time_literals_are_current_timeline_seconds) ... ok
+test_two_undos_follow_latest_active_edits_and_new_edit_clears_redo (test_timeline_engine.TimelineEngineTests.test_two_undos_follow_latest_active_edits_and_new_edit_clears_redo) ... ok
+test_undo_and_redo_round_trip (test_timeline_engine.TimelineEngineTests.test_undo_and_redo_round_trip) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 2.562s
+
+OK

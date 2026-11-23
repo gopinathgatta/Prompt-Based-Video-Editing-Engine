@@ -1,0 +1,220 @@
+{
+  "project": "Prompt-Based Video Editing Engine (PS2)",
+  "measured_at_local": "2026-11-22T19:38:36.063126+05:30",
+  "timezone": "Asia/Calcutta",
+  "environment": {
+    "python": "Python 3.12.2",
+    "os": "Windows-11-10.0.28000-SP0",
+    "hardware_specs": "not captured",
+    "ffmpeg": "ffmpeg version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+    "ffprobe": "ffprobe version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers"
+  },
+  "test_run": {
+    "command": "py -m unittest discover -s tests -v",
+    "raw_log": "evidence/full_test_run.log",
+    "tests": 18,
+    "passed": 18,
+    "failed": 0,
+    "exit_code": 0,
+    "scenarios": [
+      "12 synthetic timeline unit checks",
+      "4 synthetic instruction-parser checks",
+      "1 generated-video FFmpeg render integration check",
+      "1 generated-video HTTP API end-to-end check (also checks UI HTML, readiness and output downloads)"
+    ]
+  },
+  "determinism": {
+    "test": "same caption + cut sequence run three times from the same fixture",
+    "sessions": 1,
+    "runs_per_sequence": 3,
+    "matching_hashes": 3,
+    "rate": 1.0,
+    "canonical_hash": "06b7e926db87c2ccc514ddf474e3ba722436c204962abe8dd2cfe39baefabc49",
+    "raw_evidence": "tests/test_timeline_engine.py::test_identical_fixture_runs_have_identical_canonical_hash"
+  },
+  "render": {
+    "input": "outputs/demo/synthetic_source.mp4",
+    "output": "outputs/demo/synthetic_edited.mp4",
+    "manifest": "outputs/demo/synthetic_edited.mp4.manifest.json",
+    "measurements": {
+      "source_sha256": "1e37c9aeb619f044a9be86a082df01ca6eb595ec15d34ebfe90bbce27c290805",
+      "output_path": "outputs/demo/synthetic_edited.mp4",
+      "output_sha256": "215b481c7c7f12d4ff7c8c5398dc8ffa5d212853286906e0c57f9670394b4a97",
+      "timeline_duration_s": 6.0,
+      "rendered_duration_s": 6.033333,
+      "duration_error_frames": 0.999989999999995,
+      "av_start_offset_frames": 0.0,
+      "frame_rate": 30.0,
+      "audio_present": true,
+      "render_seconds": 0.34898059999977704,
+      "versions": {
+        "ffmpeg": "ffmpeg version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+        "ffprobe": "ffprobe version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers"
+      },
+      "render_settings": {
+        "video_encoder": "libx264",
+        "preset": "veryfast",
+        "crf": 20,
+        "pixel_format": "yuv420p",
+        "audio_encoder": "aac",
+        "audio_bitrate": "160k",
+        "font_file": "C:/Windows/Fonts/arial.ttf",
+        "timestamp_policy": "current_timeline_seconds"
+      },
+      "warnings": [
+        "No automatic transcription was performed.",
+        "A/V start offset is a stream timestamp comparison; perceptual sync was not measured."
+      ],
+      "models": [],
+      "cost": "No external model/service cost; local FFmpeg runtime not monetized.",
+      "rights": "Input-media rights are the uploader's responsibility; FFmpeg distribution/build licensing must be verified before commercial deployment.",
+      "licenses": {
+        "application": "pre-existing timeline code provenance is unverified; see SOURCES.md",
+        "ffmpeg": "host build is GPL-enabled; see SOURCES.md",
+        "font": "font licensing depends on configured PS2_FONT_FILE; see SOURCES.md"
+      }
+    },
+    "measurement_method": "FFprobe format/video/audio stream metadata; duration error is absolute duration difference times source frame rate; A/V offset is stream start_time difference times frame rate only; no perceptual sync or listening measurement."
+  },
+  "instruction_latency": {
+    "official_5_minute_video": null,
+    "official_60_minute_video": null,
+    "measured_short_synthetic_session_median_ms": 12.404,
+    "measured_short_synthetic_session_maximum_ms": 13.554,
+    "note": "One 8-second synthetic run with nine command responses; no official 5/60-minute latency benchmark."
+  },
+  "clarification": {
+    "tested_ambiguous_cases": 1,
+    "asked_for_clarification": 1,
+    "guessed": 0,
+    "note": "One synthetic API scenario with two pricing/cost terms; does not estimate broad clarification quality. See raw E2E test."
+  },
+  "word_clipping": {
+    "result": null,
+    "note": "No 20-cut human listening check or speech media."
+  },
+  "cost": {
+    "external_model_api_cost": "0 recorded; no external model/API was called",
+    "local_compute_cost": "unknown/not monetized",
+    "cost_per_video_minute": "unknown/not measured"
+  },
+  "warnings": [
+    "Synthetic pattern/sine media only; no transcription or human speech.",
+    "Stream start offset is not perceptual audio/video synchronization.",
+    "Hardware details not recorded.",
+    "Docker and public deployment were not verified.",
+    "Existing timeline code provenance/license is unresolved.",
+    "Instruction latency was measured only on one 8-second synthetic runner session."
+  ],
+  "raw_test_run_excerpt": "lor_change_without_caption_is_rejected) ... ok\ntest_restore_intro_does_not_duplicate_existing_source (test_instruction_parser.InstructionParserTests.test_restore_intro_does_not_duplicate_existing_source) ... ok\ntest_restore_intro_restores_only_the_missing_prefix (test_instruction_parser.InstructionParserTests.test_restore_intro_restores_only_the_missing_prefix) ... ok\ntest_cut_speed_and_caption_render_to_valid_video (test_render_integration.RenderIntegrationTests.test_cut_speed_and_caption_render_to_valid_video) ... ok\ntest_caption_is_hidden_on_exact_cut_and_returns_when_source_is_restored (test_timeline_engine.TimelineEngineTests.test_caption_is_hidden_on_exact_cut_and_returns_when_source_is_restored) ... ok\ntest_caption_word_anchor_moves_after_preceding_cut (test_timeline_engine.TimelineEngineTests.test_caption_word_anchor_moves_after_preceding_cut) ... ok\ntest_identical_fixture_runs_have_identical_canonical_hash (test_timeline_engine.TimelineEngineTests.test_identical_fixture_runs_have_identical_canonical_hash) ... ok\ntest_invalid_caption_reference_is_rejected (test_timeline_engine.TimelineEngineTests.test_invalid_caption_reference_is_rejected) ... ok\ntest_out_of_range_and_whole_video_cuts_are_rejected_without_mutation (test_timeline_engine.TimelineEngineTests.test_out_of_range_and_whole_video_cuts_are_rejected_without_mutation) ... ok\ntest_reorder_preserves_word_ids (test_timeline_engine.TimelineEngineTests.test_reorder_preserves_word_ids) ... ok\ntest_repeat_identical_cut_is_safe_noop (test_timeline_engine.TimelineEngineTests.test_repeat_identical_cut_is_safe_noop) ... ok\ntest_restore_source_range_restores_content_without_reverting_other_edits (test_timeline_engine.TimelineEngineTests.test_restore_source_range_restores_content_without_reverting_other_edits) ... ok\ntest_speed_changes_timeline_duration_not_source_anchors (test_timeline_engine.TimelineEngineTests.test_speed_changes_timeline_duration_not_source_anchors) ... ok\ntest_time_literals_are_current_timeline_seconds (test_timeline_engine.TimelineEngineTests.test_time_literals_are_current_timeline_seconds) ... ok\ntest_two_undos_follow_latest_active_edits_and_new_edit_clears_redo (test_timeline_engine.TimelineEngineTests.test_two_undos_follow_latest_active_edits_and_new_edit_clears_redo) ... ok\ntest_undo_and_redo_round_trip (test_timeline_engine.TimelineEngineTests.test_undo_and_redo_round_trip) ... ok\n\n----------------------------------------------------------------------\nRan 18 tests in 2.694s\n\nOK\n",
+  "session_runner": {
+    "command": "py scripts/run_session.py examples/demo_session.json --start-server --output outputs/session_runs",
+    "raw_result": "outputs/session_runs/demo_session_results.json",
+    "raw_cli_log": "evidence/session_runner_cli.log",
+    "timeline_snapshots": [
+      "outputs/session_runs/demo_session_step_01.json",
+      "outputs/session_runs/demo_session_step_02.json",
+      "outputs/session_runs/demo_session_step_03.json",
+      "outputs/session_runs/demo_session_step_04.json",
+      "outputs/session_runs/demo_session_step_05.json",
+      "outputs/session_runs/demo_session_step_06.json",
+      "outputs/session_runs/demo_session_step_07.json",
+      "outputs/session_runs/demo_session_step_08.json",
+      "outputs/session_runs/demo_session_step_09.json"
+    ],
+    "instructions": 9,
+    "instruction_statuses": {
+      "Applied": 8,
+      "Needs clarification": 1,
+      "Rejected": 0
+    },
+    "latency_ms": {
+      "samples": [
+        12.805,
+        13.247,
+        2.297,
+        12.909,
+        13.554,
+        12.096,
+        11.971,
+        12.404,
+        2.439
+      ],
+      "median": 12.404,
+      "maximum": 13.554,
+      "scope": "One 8-second synthetic session on local Windows host; not official 5-minute or 60-minute benchmark."
+    },
+    "caption_color": "red",
+    "render_job_status": "succeeded",
+    "render_outputs": [
+      "outputs\\session_runs\\demo_session_rendered.mp4",
+      "outputs\\session_runs\\demo_session_rendered.mp4.manifest.json"
+    ],
+    "render_manifest": {
+      "source_sha256": "1e37c9aeb619f044a9be86a082df01ca6eb595ec15d34ebfe90bbce27c290805",
+      "output_path": "c58a1685-7b6a-42d5-a29b-d905139c1b00_641248d0-1b94-42cd-bb97-c88eaa939f53.mp4",
+      "output_sha256": "60f543b051b6856157d2dd6d3fe153114f578e48892779cd60c96e5fbe2adce6",
+      "timeline_duration_s": 5.5,
+      "rendered_duration_s": 5.533333,
+      "duration_error_frames": 0.999989999999995,
+      "av_start_offset_frames": 0.0,
+      "frame_rate": 30.0,
+      "audio_present": true,
+      "render_seconds": 0.32772079999995185,
+      "versions": {
+        "ffmpeg": "ffmpeg version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+        "ffprobe": "ffprobe version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers"
+      },
+      "render_settings": {
+        "video_encoder": "libx264",
+        "preset": "veryfast",
+        "crf": 20,
+        "pixel_format": "yuv420p",
+        "audio_encoder": "aac",
+        "audio_bitrate": "160k",
+        "font_file": "C:/Windows/Fonts/arial.ttf",
+        "timestamp_policy": "current_timeline_seconds"
+      },
+      "warnings": [
+        "No automatic transcription was performed.",
+        "A/V start offset is a stream timestamp comparison; perceptual sync was not measured."
+      ],
+      "models": [],
+      "cost": "No external model/service cost; local FFmpeg runtime not monetized.",
+      "rights": "Input-media rights are the uploader's responsibility; FFmpeg distribution/build licensing must be verified before commercial deployment.",
+      "licenses": {
+        "application": "pre-existing timeline code provenance is unverified; see SOURCES.md",
+        "ffmpeg": "host build is GPL-enabled; see SOURCES.md",
+        "font": "font licensing depends on configured PS2_FONT_FILE; see SOURCES.md"
+      }
+    },
+    "note": "Single 8-second synthetic clip; not the official long-video benchmark."
+  },
+  "deliverables": {
+    "outputs/Assessment2_G_Manobhiram.xlsx": {
+      "sha256": "a81b4f9d5e0b196c9e0462389a8ec9ded0a04f07fa99a47045f3baf3aaf0c53e",
+      "bytes": 26582
+    },
+    "outputs/demo/synthetic_source.mp4": {
+      "sha256": "1e37c9aeb619f044a9be86a082df01ca6eb595ec15d34ebfe90bbce27c290805",
+      "bytes": 875809
+    },
+    "outputs/demo/synthetic_edited.mp4": {
+      "sha256": "215b481c7c7f12d4ff7c8c5398dc8ffa5d212853286906e0c57f9670394b4a97",
+      "bytes": 823622
+    },
+    "outputs/demo/synthetic_preview.png": {
+      "sha256": "0366aa85a3cb00af567e92315b35000998ff76e8816e43adbbc45c0c2e545f86",
+      "bytes": 66560
+    },
+    "outputs/session_runs/demo_session_rendered.mp4": {
+      "sha256": "60f543b051b6856157d2dd6d3fe153114f578e48892779cd60c96e5fbe2adce6",
+      "bytes": 761809
+    },
+    "outputs/session_runs/demo_session_rendered.mp4.manifest.json": {
+      "sha256": "504345ccdf6d37c0c40dbd8ae344d323b4242abc439e4519627a3c9eee6f6b61",
+      "bytes": 1741
+    }
+  },
+  "finalized_at_local": "2026-11-22T19:40:07.880838+05:30"
+}

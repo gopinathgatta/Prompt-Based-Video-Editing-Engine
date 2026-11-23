@@ -1,0 +1,9 @@
+{
+  "output": "evidence\\rendered.mp4",
+  "source_sha256": "5b81dee59aafdbacef5c2fd227baedcac36fa7ae349d7ce5357c437e2cc83d3a",
+  "timeline_hash": "4dc672b6fdbe91b8ff939b5a94fffd6f9d85ea58bd2405c7f768ed5a50dbd035",
+  "renderer": "ffmpeg",
+  "warnings": [
+    "Captions and text overlays are represented in the timeline but not burned in this renderer yet."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "video": "outputs/demo/synthetic_source.mp4",
+  "media_rights": "Synthetic test pattern and sine tone generated locally with FFmpeg; no human media.",
+  "words": [
+    {"id":"welcome","text":"Welcome","start_s":3.0,"end_s":3.25,"speaker":"speaker_1","confidence":1.0},
+    {"id":"to","text":"to","start_s":3.26,"end_s":3.4,"speaker":"speaker_1","confidence":1.0},
+    {"id":"the","text":"the","start_s":3.41,"end_s":3.52,"speaker":"speaker_1","confidence":1.0},
+    {"id":"channel","text":"channel","start_s":3.53,"end_s":4.0,"speaker":"speaker_1","confidence":1.0},
+    {"id":"pricing1","text":"pricing","start_s":5.1,"end_s":5.5,"speaker":"speaker_1","confidence":1.0},
+    {"id":"pricing2","text":"cost","start_s":6.4,"end_s":6.8,"speaker":"speaker_1","confidence":1.0},
+    {"id":"filler","text":"um","start_s":7.1,"end_s":7.3,"speaker":"speaker_1","confidence":1.0,"filler":true}
+  ],
+  "steps": [
+    {"say":"Add a caption 'Welcome!' when I say welcome to the channel"},
+    {"say":"Remove the pricing discussion"},
+    {"say":"the second one"},
+    {"say":"Cut the first 1 seconds"},
+    {"say":"Speed up from 4 to 6 seconds by 2x"},
+    {"say":"Restore the intro"},
+    {"say":"Undo the previous edit"},
+    {"say":"Remove filler words"},
+    {"say":"Change the existing caption to red"}
+  ],
+  "render": true
+}

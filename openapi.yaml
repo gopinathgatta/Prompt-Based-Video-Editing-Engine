@@ -1,0 +1,196 @@
+openapi: 3.1.0
+info:
+  title: Prompt Video Editor Local API
+  version: 0.1.0
+  description: Local editor demo. Transcripts are user supplied; no automatic speech recognition is configured.
+servers:
+  - url: http://127.0.0.1:8000
+paths:
+  /health:
+    get:
+      summary: Liveness check
+      responses:
+        '200': {description: Server is running}
+  /ready:
+    get:
+      summary: Readiness check
+      responses:
+        '200': {description: FFmpeg availability}
+  /api/v1/media/upload:
+    post:
+      summary: Upload MP4 or MOV media and create an editing session
+      parameters:
+        - in: query
+          name: filename
+          required: true
+          schema: {type: string}
+        - {$ref: '#/components/parameters/IdempotencyKey'}
+      requestBody:
+        required: true
+        content:
+          video/mp4: {schema: {type: string, format: binary}}
+          video/quicktime: {schema: {type: string, format: binary}}
+          application/octet-stream: {schema: {type: string, format: binary}}
+      responses:
+        '201': {description: Session and FFprobe metadata}
+        '400': {$ref: '#/components/responses/Error'}
+        '413': {$ref: '#/components/responses/Error'}
+        '415': {$ref: '#/components/responses/Error'}
+        '422': {$ref: '#/components/responses/Error'}
+  /api/v1/sessions/{session_id}:
+    get:
+      summary: Read the current session and timeline
+      parameters: [{$ref: '#/components/parameters/SessionId'}]
+      responses:
+        '200': {description: Session state}
+        '404': {$ref: '#/components/responses/Error'}
+  /api/v1/sessions/{session_id}/source:
+    get:
+      summary: Preview the original source media
+      parameters: [{$ref: '#/components/parameters/SessionId'}]
+      responses:
+        '200': {description: Original MP4 or MOV media}
+  /api/v1/sessions/{session_id}/transcript:
+    post:
+      summary: Load user-supplied word-level transcript
+      parameters: [{$ref: '#/components/parameters/SessionId'}, {$ref: '#/components/parameters/IdempotencyKey'}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [words]
+              properties:
+                words: {type: array, items: {$ref: '#/components/schemas/Word'}}
+      responses:
+        '200': {description: Transcript loaded}
+        '422': {$ref: '#/components/responses/Error'}
+  /api/v1/sessions/{session_id}/instructions:
+    post:
+      summary: Interpret a supported instruction and apply deterministic timeline operation
+      parameters: [{$ref: '#/components/parameters/SessionId'}, {$ref: '#/components/parameters/IdempotencyKey'}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [instruction]
+              properties: {instruction: {type: string}}
+      responses:
+        '200':
+          description: Instruction result
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/InstructionResult'}
+  /api/v1/sessions/{session_id}/undo:
+    post:
+      summary: Undo the last active timeline edit
+      parameters: [{$ref: '#/components/parameters/SessionId'}, {$ref: '#/components/parameters/IdempotencyKey'}]
+      responses: {'200': {description: Undo result}}
+  /api/v1/sessions/{session_id}/redo:
+    post:
+      summary: Redo the last undone edit
+      parameters: [{$ref: '#/components/parameters/SessionId'}, {$ref: '#/components/parameters/IdempotencyKey'}]
+      responses: {'200': {description: Redo result}}
+  /api/v1/sessions/{session_id}/restore:
+    post:
+      summary: Restore an original-source interval
+      parameters: [{$ref: '#/components/parameters/SessionId'}, {$ref: '#/components/parameters/IdempotencyKey'}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [source_start_s, source_end_s]
+              properties: {source_start_s: {type: number}, source_end_s: {type: number}}
+      responses: {'200': {description: Restore result}}
+  /api/v1/sessions/{session_id}/render:
+    post:
+      summary: Queue an FFmpeg render job
+      parameters: [{$ref: '#/components/parameters/SessionId'}, {$ref: '#/components/parameters/IdempotencyKey'}]
+      responses:
+        '202':
+          description: Render queued
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {job_id: {type: string}, status: {const: queued}}
+  /api/v1/jobs/{job_id}:
+    get:
+      summary: Read render job status
+      parameters:
+        - in: path
+          name: job_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Job state, progress, and result links}
+        '404': {$ref: '#/components/responses/Error'}
+  /api/v1/outputs/{filename}:
+    get:
+      summary: Download a rendered video or manifest
+      parameters:
+        - in: path
+          name: filename
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Rendered output}
+        '404': {$ref: '#/components/responses/Error'}
+components:
+  parameters:
+    SessionId:
+      in: path
+      name: session_id
+      required: true
+      schema: {type: string}
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      schema: {type: string, minLength: 1}
+  responses:
+    Error:
+      description: Standard JSON error response
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: {$ref: '#/components/schemas/Error'}
+  schemas:
+    Error:
+      type: object
+      required: [code, message, retryable, details]
+      properties:
+        code: {type: string, pattern: '^[A-Z0-9_]+$'}
+        message: {type: string}
+        retryable: {type: boolean}
+        details: {type: object}
+    Word:
+      type: object
+      required: [id, text, start_s, end_s]
+      properties:
+        id: {type: string}
+        text: {type: string}
+        start_s: {type: number, minimum: 0, description: Original-source seconds}
+        end_s: {type: number, exclusiveMinimum: 0}
+        speaker: {type: string, default: speaker_1}
+        confidence: {type: number, minimum: 0, maximum: 1, default: 1}
+        filler: {type: boolean, default: false}
+    InstructionResult:
+      type: object
+      required: [status, time_policy]
+      properties:
+        status: {enum: [Applied, Needs clarification, Rejected]}
+        time_policy: {type: string}
+        duration_s: {type: number}
+        timeline_hash: {type: string}
+        question: {type: [string, 'null']}
+        options: {type: array, items: {type: string}}
+        reason: {type: [string, 'null']}

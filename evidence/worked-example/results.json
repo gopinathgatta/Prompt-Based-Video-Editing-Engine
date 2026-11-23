@@ -1,0 +1,1444 @@
+{
+  "results": [
+    {
+      "say": "Add a caption 'Welcome!' when I say welcome to the channel",
+      "status": "applied",
+      "operations": [
+        {
+          "type": "add_caption",
+          "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6"
+        }
+      ],
+      "summary": "Caption attached to 4 source words.",
+      "question": null,
+      "options": [],
+      "warnings": [],
+      "time_policy": "original_source_time",
+      "timeline_hash": "98d88bf184ba7958175937d48dc3597bc7b03d28ae130d16d82840d889981c32",
+      "duration_s": 300.0
+    },
+    {
+      "say": "Cut the first 30 seconds",
+      "status": "applied",
+      "operations": [
+        {
+          "type": "cut",
+          "start": 0,
+          "end": 30,
+          "anchor": "source_range"
+        }
+      ],
+      "summary": "Cut 30.0 seconds from original time.",
+      "question": null,
+      "options": [],
+      "warnings": [],
+      "time_policy": "original_source_time",
+      "timeline_hash": "ec9562c994b80abd5bf2b30d19892225e65a7158ebe6f37e935ba658a6d27e91",
+      "duration_s": 270.0
+    },
+    {
+      "say": "Remove the part about pricing",
+      "status": "needs_clarification",
+      "operations": [],
+      "summary": "Pricing has multiple content matches.",
+      "question": "Which pricing mention should be removed?",
+      "options": [
+        "1: 65.0s (pricing)",
+        "2: 140.0s (cost)",
+        "3: 195.0s (pricing)",
+        "all"
+      ],
+      "warnings": [],
+      "time_policy": "original_source_time",
+      "timeline_hash": "ec9562c994b80abd5bf2b30d19892225e65a7158ebe6f37e935ba658a6d27e91",
+      "duration_s": 270.0
+    },
+    {
+      "say": "the second one",
+      "status": "applied",
+      "operations": [
+        {
+          "type": "cut",
+          "start": 139.85,
+          "end": 140.55,
+          "anchor": "word:w005"
+        }
+      ],
+      "summary": "Cut 1 selected content occurrence(s).",
+      "question": null,
+      "options": [],
+      "warnings": [],
+      "time_policy": "original_source_time",
+      "timeline_hash": "784f2e8fa9ec4da960c05d70e0b0da959c8f72953c0106c93215255d30ca701e",
+      "duration_s": 269.3
+    },
+    {
+      "say": "Speed up from 1:00 to 1:30 by 2x",
+      "status": "applied",
+      "operations": [
+        {
+          "type": "speed",
+          "start": 60.0,
+          "end": 90.0,
+          "factor": 2.0
+        }
+      ],
+      "summary": "Applied speed change using original_source_time.",
+      "question": null,
+      "options": [],
+      "warnings": [],
+      "time_policy": "original_source_time",
+      "timeline_hash": "3b387f386d82ffbc5c865394ea4ce53f26fe93947972015a9089c71ae46906f7",
+      "duration_s": 254.3
+    },
+    {
+      "say": "Actually, put the intro back",
+      "status": "applied",
+      "operations": [
+        {
+          "type": "restore",
+          "target_history_id": "159667cd-797a-4cf3-becb-f3d861e5b8ee"
+        }
+      ],
+      "summary": "Restored the selected earlier cut while preserving unrelated edits.",
+      "question": null,
+      "options": [],
+      "warnings": [],
+      "time_policy": "original_source_time",
+      "timeline_hash": "f5201a9a78ea977cec0ffd79ad4d05ff949fa5fbc4b6e4e2cc8c61c4cd9a371e",
+      "duration_s": 255.0
+    },
+    {
+      "say": "Undo",
+      "status": "applied",
+      "operations": [
+        {
+          "type": "undo",
+          "target": "c17c5e64-d7cd-4e1a-a62e-7a3f18d869fb"
+        }
+      ],
+      "summary": "Undid restore.",
+      "question": null,
+      "options": [],
+      "warnings": [],
+      "time_policy": "original_source_time",
+      "timeline_hash": "3b387f386d82ffbc5c865394ea4ce53f26fe93947972015a9089c71ae46906f7",
+      "duration_s": 254.3
+    },
+    {
+      "say": "Make that caption red",
+      "status": "applied",
+      "operations": [
+        {
+          "type": "style_caption",
+          "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6"
+        }
+      ],
+      "summary": "Changed the referenced caption to red.",
+      "question": null,
+      "options": [],
+      "warnings": [],
+      "time_policy": "original_source_time",
+      "timeline_hash": "76b17654e39c83edec8f571b6f1faa6ebd1dbf27eca48397e4e015450987422a",
+      "duration_s": 254.3
+    },
+    {
+      "say": "render",
+      "status": "applied",
+      "operations": [
+        {
+          "type": "render_plan"
+        }
+      ],
+      "summary": "Render plan generated; external FFmpeg execution is not enabled in this local build.",
+      "question": null,
+      "options": [],
+      "warnings": [
+        "RENDER_NOT_EXECUTED"
+      ],
+      "time_policy": "original_source_time",
+      "timeline_hash": "76b17654e39c83edec8f571b6f1faa6ebd1dbf27eca48397e4e015450987422a",
+      "duration_s": 254.3
+    }
+  ],
+  "final_timeline": {
+    "source": {
+      "url": "mock://talking-head.mp4",
+      "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+      "immutable": true
+    },
+    "transcript": [
+      {
+        "id": "w000",
+        "text": "welcome",
+        "start": 42,
+        "end": 42.4,
+        "speaker": "host",
+        "confidence": 0.98
+      },
+      {
+        "id": "w001",
+        "text": "to",
+        "start": 42.4,
+        "end": 42.6,
+        "speaker": "host",
+        "confidence": 0.98
+      },
+      {
+        "id": "w002",
+        "text": "the",
+        "start": 42.6,
+        "end": 42.8,
+        "speaker": "host",
+        "confidence": 0.98
+      },
+      {
+        "id": "w003",
+        "text": "channel",
+        "start": 42.8,
+        "end": 43.2,
+        "speaker": "host",
+        "confidence": 0.98
+      },
+      {
+        "id": "w004",
+        "text": "pricing",
+        "start": 65,
+        "end": 65.4,
+        "speaker": "host",
+        "confidence": 0.98
+      },
+      {
+        "id": "w005",
+        "text": "cost",
+        "start": 140,
+        "end": 140.4,
+        "speaker": "host",
+        "confidence": 0.98
+      },
+      {
+        "id": "w006",
+        "text": "pricing",
+        "start": 195,
+        "end": 195.5,
+        "speaker": "host",
+        "confidence": 0.98
+      },
+      {
+        "id": "w007",
+        "text": "thanks",
+        "start": 220,
+        "end": 220.3,
+        "speaker": "host",
+        "confidence": 0.98
+      },
+      {
+        "id": "w008",
+        "text": "thanks",
+        "start": 240,
+        "end": 240.3,
+        "speaker": "host",
+        "confidence": 0.98
+      }
+    ],
+    "duration": 300.0,
+    "cuts": [
+      {
+        "start": 0,
+        "end": 30,
+        "anchor": "source_range"
+      },
+      {
+        "start": 139.85,
+        "end": 140.55,
+        "anchor": "word:w005"
+      }
+    ],
+    "speeds": [
+      {
+        "start": 60.0,
+        "end": 90.0,
+        "factor": 2.0
+      }
+    ],
+    "captions": [
+      {
+        "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+        "text": "Welcome!",
+        "anchor_word_ids": [
+          "w000",
+          "w001",
+          "w002",
+          "w003"
+        ],
+        "style": {
+          "color": "#ef4444",
+          "size": 36
+        }
+      }
+    ],
+    "audio_effects": [],
+    "warnings": [],
+    "version": "1.0"
+  },
+  "history": [
+    {
+      "id": "7a71ae5d-b806-47c6-96a7-8a833dcb92b7",
+      "type": "add_caption",
+      "instruction": "Add a caption 'Welcome!' when I say welcome to the channel",
+      "before": {
+        "source": {
+          "url": "mock://talking-head.mp4",
+          "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+          "immutable": true
+        },
+        "transcript": [
+          {
+            "id": "w000",
+            "text": "welcome",
+            "start": 42,
+            "end": 42.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w001",
+            "text": "to",
+            "start": 42.4,
+            "end": 42.6,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w002",
+            "text": "the",
+            "start": 42.6,
+            "end": 42.8,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w003",
+            "text": "channel",
+            "start": 42.8,
+            "end": 43.2,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w004",
+            "text": "pricing",
+            "start": 65,
+            "end": 65.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w005",
+            "text": "cost",
+            "start": 140,
+            "end": 140.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w006",
+            "text": "pricing",
+            "start": 195,
+            "end": 195.5,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w007",
+            "text": "thanks",
+            "start": 220,
+            "end": 220.3,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w008",
+            "text": "thanks",
+            "start": 240,
+            "end": 240.3,
+            "speaker": "host",
+            "confidence": 0.98
+          }
+        ],
+        "duration": 300.0,
+        "cuts": [],
+        "speeds": [],
+        "captions": [],
+        "audio_effects": [],
+        "warnings": [],
+        "version": "1.0"
+      },
+      "after": {
+        "source": {
+          "url": "mock://talking-head.mp4",
+          "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+          "immutable": true
+        },
+        "transcript": [
+          {
+            "id": "w000",
+            "text": "welcome",
+            "start": 42,
+            "end": 42.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w001",
+            "text": "to",
+            "start": 42.4,
+            "end": 42.6,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w002",
+            "text": "the",
+            "start": 42.6,
+            "end": 42.8,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w003",
+            "text": "channel",
+            "start": 42.8,
+            "end": 43.2,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w004",
+            "text": "pricing",
+            "start": 65,
+            "end": 65.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w005",
+            "text": "cost",
+            "start": 140,
+            "end": 140.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w006",
+            "text": "pricing",
+            "start": 195,
+            "end": 195.5,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w007",
+            "text": "thanks",
+            "start": 220,
+            "end": 220.3,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w008",
+            "text": "thanks",
+            "start": 240,
+            "end": 240.3,
+            "speaker": "host",
+            "confidence": 0.98
+          }
+        ],
+        "duration": 300.0,
+        "cuts": [],
+        "speeds": [],
+        "captions": [
+          {
+            "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+            "text": "Welcome!",
+            "anchor_word_ids": [
+              "w000",
+              "w001",
+              "w002",
+              "w003"
+            ],
+            "style": {
+              "color": "#f8fafc",
+              "size": 36
+            }
+          }
+        ],
+        "audio_effects": [],
+        "warnings": [],
+        "version": "1.0"
+      },
+      "operation": {
+        "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+        "text": "Welcome!",
+        "anchor_word_ids": [
+          "w000",
+          "w001",
+          "w002",
+          "w003"
+        ],
+        "style": {
+          "color": "#f8fafc",
+          "size": 36
+        }
+      }
+    },
+    {
+      "id": "6439e7a5-17cf-443e-bda3-82d3ffa07506",
+      "type": "cut",
+      "instruction": "Cut the first 30 seconds",
+      "before": {
+        "source": {
+          "url": "mock://talking-head.mp4",
+          "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+          "immutable": true
+        },
+        "transcript": [
+          {
+            "id": "w000",
+            "text": "welcome",
+            "start": 42,
+            "end": 42.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w001",
+            "text": "to",
+            "start": 42.4,
+            "end": 42.6,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w002",
+            "text": "the",
+            "start": 42.6,
+            "end": 42.8,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w003",
+            "text": "channel",
+            "start": 42.8,
+            "end": 43.2,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w004",
+            "text": "pricing",
+            "start": 65,
+            "end": 65.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w005",
+            "text": "cost",
+            "start": 140,
+            "end": 140.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w006",
+            "text": "pricing",
+            "start": 195,
+            "end": 195.5,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w007",
+            "text": "thanks",
+            "start": 220,
+            "end": 220.3,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w008",
+            "text": "thanks",
+            "start": 240,
+            "end": 240.3,
+            "speaker": "host",
+            "confidence": 0.98
+          }
+        ],
+        "duration": 300.0,
+        "cuts": [],
+        "speeds": [],
+        "captions": [
+          {
+            "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+            "text": "Welcome!",
+            "anchor_word_ids": [
+              "w000",
+              "w001",
+              "w002",
+              "w003"
+            ],
+            "style": {
+              "color": "#f8fafc",
+              "size": 36
+            }
+          }
+        ],
+        "audio_effects": [],
+        "warnings": [],
+        "version": "1.0"
+      },
+      "after": {
+        "source": {
+          "url": "mock://talking-head.mp4",
+          "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+          "immutable": true
+        },
+        "transcript": [
+          {
+            "id": "w000",
+            "text": "welcome",
+            "start": 42,
+            "end": 42.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w001",
+            "text": "to",
+            "start": 42.4,
+            "end": 42.6,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w002",
+            "text": "the",
+            "start": 42.6,
+            "end": 42.8,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w003",
+            "text": "channel",
+            "start": 42.8,
+            "end": 43.2,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w004",
+            "text": "pricing",
+            "start": 65,
+            "end": 65.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w005",
+            "text": "cost",
+            "start": 140,
+            "end": 140.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w006",
+            "text": "pricing",
+            "start": 195,
+            "end": 195.5,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w007",
+            "text": "thanks",
+            "start": 220,
+            "end": 220.3,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w008",
+            "text": "thanks",
+            "start": 240,
+            "end": 240.3,
+            "speaker": "host",
+            "confidence": 0.98
+          }
+        ],
+        "duration": 300.0,
+        "cuts": [
+          {
+            "start": 0,
+            "end": 30,
+            "anchor": "source_range"
+          }
+        ],
+        "speeds": [],
+        "captions": [
+          {
+            "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+            "text": "Welcome!",
+            "anchor_word_ids": [
+              "w000",
+              "w001",
+              "w002",
+              "w003"
+            ],
+            "style": {
+              "color": "#f8fafc",
+              "size": 36
+            }
+          }
+        ],
+        "audio_effects": [],
+        "warnings": [],
+        "version": "1.0"
+      },
+      "operation": {
+        "start": 0,
+        "end": 30,
+        "anchor": "source_range"
+      }
+    },
+    {
+      "id": "159667cd-797a-4cf3-becb-f3d861e5b8ee",
+      "type": "cut_content",
+      "instruction": "Remove the part about pricing",
+      "before": {
+        "source": {
+          "url": "mock://talking-head.mp4",
+          "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+          "immutable": true
+        },
+        "transcript": [
+          {
+            "id": "w000",
+            "text": "welcome",
+            "start": 42,
+            "end": 42.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w001",
+            "text": "to",
+            "start": 42.4,
+            "end": 42.6,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w002",
+            "text": "the",
+            "start": 42.6,
+            "end": 42.8,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w003",
+            "text": "channel",
+            "start": 42.8,
+            "end": 43.2,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w004",
+            "text": "pricing",
+            "start": 65,
+            "end": 65.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w005",
+            "text": "cost",
+            "start": 140,
+            "end": 140.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w006",
+            "text": "pricing",
+            "start": 195,
+            "end": 195.5,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w007",
+            "text": "thanks",
+            "start": 220,
+            "end": 220.3,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w008",
+            "text": "thanks",
+            "start": 240,
+            "end": 240.3,
+            "speaker": "host",
+            "confidence": 0.98
+          }
+        ],
+        "duration": 300.0,
+        "cuts": [
+          {
+            "start": 0,
+            "end": 30,
+            "anchor": "source_range"
+          }
+        ],
+        "speeds": [],
+        "captions": [
+          {
+            "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+            "text": "Welcome!",
+            "anchor_word_ids": [
+              "w000",
+              "w001",
+              "w002",
+              "w003"
+            ],
+            "style": {
+              "color": "#f8fafc",
+              "size": 36
+            }
+          }
+        ],
+        "audio_effects": [],
+        "warnings": [],
+        "version": "1.0"
+      },
+      "after": {
+        "source": {
+          "url": "mock://talking-head.mp4",
+          "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+          "immutable": true
+        },
+        "transcript": [
+          {
+            "id": "w000",
+            "text": "welcome",
+            "start": 42,
+            "end": 42.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w001",
+            "text": "to",
+            "start": 42.4,
+            "end": 42.6,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w002",
+            "text": "the",
+            "start": 42.6,
+            "end": 42.8,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w003",
+            "text": "channel",
+            "start": 42.8,
+            "end": 43.2,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w004",
+            "text": "pricing",
+            "start": 65,
+            "end": 65.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w005",
+            "text": "cost",
+            "start": 140,
+            "end": 140.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w006",
+            "text": "pricing",
+            "start": 195,
+            "end": 195.5,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w007",
+            "text": "thanks",
+            "start": 220,
+            "end": 220.3,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w008",
+            "text": "thanks",
+            "start": 240,
+            "end": 240.3,
+            "speaker": "host",
+            "confidence": 0.98
+          }
+        ],
+        "duration": 300.0,
+        "cuts": [
+          {
+            "start": 0,
+            "end": 30,
+            "anchor": "source_range"
+          },
+          {
+            "start": 139.85,
+            "end": 140.55,
+            "anchor": "word:w005"
+          }
+        ],
+        "speeds": [],
+        "captions": [
+          {
+            "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+            "text": "Welcome!",
+            "anchor_word_ids": [
+              "w000",
+              "w001",
+              "w002",
+              "w003"
+            ],
+            "style": {
+              "color": "#f8fafc",
+              "size": 36
+            }
+          }
+        ],
+        "audio_effects": [],
+        "warnings": [],
+        "version": "1.0"
+      },
+      "operation": {
+        "matches": [
+          "w005"
+        ]
+      }
+    },
+    {
+      "id": "ded5b677-46f9-408e-879a-7a1f834e0ac0",
+      "type": "speed",
+      "instruction": "Speed up from 1:00 to 1:30 by 2x",
+      "before": {
+        "source": {
+          "url": "mock://talking-head.mp4",
+          "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+          "immutable": true
+        },
+        "transcript": [
+          {
+            "id": "w000",
+            "text": "welcome",
+            "start": 42,
+            "end": 42.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w001",
+            "text": "to",
+            "start": 42.4,
+            "end": 42.6,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w002",
+            "text": "the",
+            "start": 42.6,
+            "end": 42.8,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w003",
+            "text": "channel",
+            "start": 42.8,
+            "end": 43.2,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w004",
+            "text": "pricing",
+            "start": 65,
+            "end": 65.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w005",
+            "text": "cost",
+            "start": 140,
+            "end": 140.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w006",
+            "text": "pricing",
+            "start": 195,
+            "end": 195.5,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w007",
+            "text": "thanks",
+            "start": 220,
+            "end": 220.3,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w008",
+            "text": "thanks",
+            "start": 240,
+            "end": 240.3,
+            "speaker": "host",
+            "confidence": 0.98
+          }
+        ],
+        "duration": 300.0,
+        "cuts": [
+          {
+            "start": 0,
+            "end": 30,
+            "anchor": "source_range"
+          },
+          {
+            "start": 139.85,
+            "end": 140.55,
+            "anchor": "word:w005"
+          }
+        ],
+        "speeds": [],
+        "captions": [
+          {
+            "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+            "text": "Welcome!",
+            "anchor_word_ids": [
+              "w000",
+              "w001",
+              "w002",
+              "w003"
+            ],
+            "style": {
+              "color": "#f8fafc",
+              "size": 36
+            }
+          }
+        ],
+        "audio_effects": [],
+        "warnings": [],
+        "version": "1.0"
+      },
+      "after": {
+        "source": {
+          "url": "mock://talking-head.mp4",
+          "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+          "immutable": true
+        },
+        "transcript": [
+          {
+            "id": "w000",
+            "text": "welcome",
+            "start": 42,
+            "end": 42.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w001",
+            "text": "to",
+            "start": 42.4,
+            "end": 42.6,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w002",
+            "text": "the",
+            "start": 42.6,
+            "end": 42.8,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w003",
+            "text": "channel",
+            "start": 42.8,
+            "end": 43.2,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w004",
+            "text": "pricing",
+            "start": 65,
+            "end": 65.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w005",
+            "text": "cost",
+            "start": 140,
+            "end": 140.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w006",
+            "text": "pricing",
+            "start": 195,
+            "end": 195.5,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w007",
+            "text": "thanks",
+            "start": 220,
+            "end": 220.3,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w008",
+            "text": "thanks",
+            "start": 240,
+            "end": 240.3,
+            "speaker": "host",
+            "confidence": 0.98
+          }
+        ],
+        "duration": 300.0,
+        "cuts": [
+          {
+            "start": 0,
+            "end": 30,
+            "anchor": "source_range"
+          },
+          {
+            "start": 139.85,
+            "end": 140.55,
+            "anchor": "word:w005"
+          }
+        ],
+        "speeds": [
+          {
+            "start": 60.0,
+            "end": 90.0,
+            "factor": 2.0
+          }
+        ],
+        "captions": [
+          {
+            "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+            "text": "Welcome!",
+            "anchor_word_ids": [
+              "w000",
+              "w001",
+              "w002",
+              "w003"
+            ],
+            "style": {
+              "color": "#f8fafc",
+              "size": 36
+            }
+          }
+        ],
+        "audio_effects": [],
+        "warnings": [],
+        "version": "1.0"
+      },
+      "operation": {
+        "start": 60.0,
+        "end": 90.0,
+        "factor": 2.0
+      }
+    },
+    {
+      "id": "965dfc95-135d-4fb8-9bf1-59d39892b689",
+      "type": "style_caption",
+      "instruction": "Make that caption red",
+      "before": {
+        "source": {
+          "url": "mock://talking-head.mp4",
+          "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+          "immutable": true
+        },
+        "transcript": [
+          {
+            "id": "w000",
+            "text": "welcome",
+            "start": 42,
+            "end": 42.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w001",
+            "text": "to",
+            "start": 42.4,
+            "end": 42.6,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w002",
+            "text": "the",
+            "start": 42.6,
+            "end": 42.8,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w003",
+            "text": "channel",
+            "start": 42.8,
+            "end": 43.2,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w004",
+            "text": "pricing",
+            "start": 65,
+            "end": 65.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w005",
+            "text": "cost",
+            "start": 140,
+            "end": 140.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w006",
+            "text": "pricing",
+            "start": 195,
+            "end": 195.5,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w007",
+            "text": "thanks",
+            "start": 220,
+            "end": 220.3,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w008",
+            "text": "thanks",
+            "start": 240,
+            "end": 240.3,
+            "speaker": "host",
+            "confidence": 0.98
+          }
+        ],
+        "duration": 300.0,
+        "cuts": [
+          {
+            "start": 0,
+            "end": 30,
+            "anchor": "source_range"
+          },
+          {
+            "start": 139.85,
+            "end": 140.55,
+            "anchor": "word:w005"
+          }
+        ],
+        "speeds": [
+          {
+            "start": 60.0,
+            "end": 90.0,
+            "factor": 2.0
+          }
+        ],
+        "captions": [
+          {
+            "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+            "text": "Welcome!",
+            "anchor_word_ids": [
+              "w000",
+              "w001",
+              "w002",
+              "w003"
+            ],
+            "style": {
+              "color": "#f8fafc",
+              "size": 36
+            }
+          }
+        ],
+        "audio_effects": [],
+        "warnings": [],
+        "version": "1.0"
+      },
+      "after": {
+        "source": {
+          "url": "mock://talking-head.mp4",
+          "sha256": "7a1cef81c5175e6075a5cfc854cc11d311fe94b76fb520317872d3c2f11a31e5",
+          "immutable": true
+        },
+        "transcript": [
+          {
+            "id": "w000",
+            "text": "welcome",
+            "start": 42,
+            "end": 42.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w001",
+            "text": "to",
+            "start": 42.4,
+            "end": 42.6,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w002",
+            "text": "the",
+            "start": 42.6,
+            "end": 42.8,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w003",
+            "text": "channel",
+            "start": 42.8,
+            "end": 43.2,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w004",
+            "text": "pricing",
+            "start": 65,
+            "end": 65.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w005",
+            "text": "cost",
+            "start": 140,
+            "end": 140.4,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w006",
+            "text": "pricing",
+            "start": 195,
+            "end": 195.5,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w007",
+            "text": "thanks",
+            "start": 220,
+            "end": 220.3,
+            "speaker": "host",
+            "confidence": 0.98
+          },
+          {
+            "id": "w008",
+            "text": "thanks",
+            "start": 240,
+            "end": 240.3,
+            "speaker": "host",
+            "confidence": 0.98
+          }
+        ],
+        "duration": 300.0,
+        "cuts": [
+          {
+            "start": 0,
+            "end": 30,
+            "anchor": "source_range"
+          },
+          {
+            "start": 139.85,
+            "end": 140.55,
+            "anchor": "word:w005"
+          }
+        ],
+        "speeds": [
+          {
+            "start": 60.0,
+            "end": 90.0,
+            "factor": 2.0
+          }
+        ],
+        "captions": [
+          {
+            "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+            "text": "Welcome!",
+            "anchor_word_ids": [
+              "w000",
+              "w001",
+              "w002",
+              "w003"
+            ],
+            "style": {
+              "color": "#ef4444",
+              "size": 36
+            }
+          }
+        ],
+        "audio_effects": [],
+        "warnings": [],
+        "version": "1.0"
+      },
+      "operation": {
+        "id": "99eebd3b-da09-4bb7-9184-fd5f4569bfe6",
+        "color": "red"
+      }
+    }
+  ]
+}

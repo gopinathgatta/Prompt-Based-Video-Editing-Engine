@@ -1,0 +1,13 @@
+services:
+  editor:
+    build: .
+    ports:
+      - "${PS2_PORT:-8000}:8000"
+    environment:
+      PS2_HOST: 0.0.0.0
+      PS2_PORT: 8000
+      PS2_DATA_DIR: /data
+      PS2_MAX_UPLOAD_BYTES: ${PS2_MAX_UPLOAD_BYTES:-209715200}
+    volumes:
+      - ./work/runtime_data:/data
+    restart: unless-stopped

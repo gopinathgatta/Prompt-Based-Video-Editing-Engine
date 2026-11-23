@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ps2/timeline.schema.json",
+  "title": "PS2 timeline core model",
+  "type": "object",
+  "required": ["source_sha256", "source_duration_s", "frame_rate", "words", "segments", "captions", "time_policy"],
+  "properties": {
+    "source_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "source_duration_s": {"type": "number", "exclusiveMinimum": 0},
+    "frame_rate": {"type": "number", "exclusiveMinimum": 0},
+    "time_policy": {"const": "current_timeline_seconds"},
+    "words": {"type": "array", "items": {"$ref": "#/$defs/word"}},
+    "segments": {"type": "array", "items": {"$ref": "#/$defs/segment"}},
+    "captions": {"type": "array", "items": {"$ref": "#/$defs/caption"}},
+    "audio_effects": {"type": "array", "items": {"type": "object"}},
+    "history": {"type": "array", "items": {"type": "object"}}
+  },
+  "$defs": {
+    "word": {
+      "type": "object",
+      "required": ["id", "text", "start_s", "end_s", "speaker", "confidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "text": {"type": "string"},
+        "start_s": {"type": "number", "minimum": 0},
+        "end_s": {"type": "number", "exclusiveMinimum": 0},
+        "speaker": {"type": "string"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "filler": {"type": "boolean"}
+      }
+    },
+    "segment": {
+      "type": "object",
+      "required": ["id", "source_start_s", "source_end_s", "speed"],
+      "properties": {
+        "id": {"type": "string"},
+        "source_start_s": {"type": "number", "minimum": 0},
+        "source_end_s": {"type": "number", "exclusiveMinimum": 0},
+        "speed": {"type": "number", "minimum": 0.25, "maximum": 4}
+      }
+    },
+    "caption": {
+      "type": "object",
+      "required": ["id", "text", "word_ids", "color"],
+      "properties": {
+        "id": {"type": "string"},
+        "text": {"type": "string"},
+        "word_ids": {"type": "array", "items": {"type": "string"}},
+        "color": {"type": "string"},
+        "minimum_duration_s": {"type": "number", "minimum": 0}
+      }
+    }
+  }
+}
