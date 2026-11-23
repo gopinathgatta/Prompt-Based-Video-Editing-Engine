@@ -22,7 +22,8 @@ ROOT = Path(__file__).resolve().parent.parent
 STATIC = ROOT / "app" / "static"
 # Vercel functions have a read-only deployment bundle; /tmp is their writable
 # ephemeral location. Local and container deployments retain the configured path.
-_default_data = "/tmp/ps2-runtime-data" if os.environ.get("VERCEL") else ROOT / "work" / "runtime_data"
+_is_serverless = bool(os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV"))
+_default_data = "/tmp/ps2-runtime-data" if _is_serverless else ROOT / "work" / "runtime_data"
 DATA = Path(os.environ.get("PS2_DATA_DIR", _default_data)).resolve()
 MEDIA_DIR, OUTPUT_DIR = DATA / "media", DATA / "outputs"
 for directory in (MEDIA_DIR, OUTPUT_DIR):
